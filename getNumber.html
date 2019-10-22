@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>等位红包</title>
+		<link rel="stylesheet" href="css/mui.min.css" />
+		<link rel="stylesheet" href="css/Font-Awesome-3.2.1/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="css/weui.css" />
+		<style>
+			* {
+			    margin: 0;
+			    padding: 0;
+			    border: 0;
+			    vertical-align: baseline;
+			}
+			ul,li,ol {
+				list-style: none;
+			}
+			body {
+				background: #fff;
+			}
+			html,body {
+				height: 100%;
+			}
+			img {
+				height: 100%;
+				width: 100%;
+			}
+			.main-content {
+				position: relative;
+				height: 100%;
+				overflow-x: hidden;
+				background: #F2F2F2;
+			}		
+			.weui_cell {
+				padding: 15px 15px;
+				text-align: center;
+				font-family: '微软雅黑';
+				font-weight: bold;
+				font-size: 20px;
+				height: 20%;
+			}
+			.shopNumber {
+				height: 25%;
+				margin: 10px 30px;
+			}
+			.shopNumber .screen {
+				height: 45px;
+				color: #999;
+				font-family: "微软雅黑";
+				margin-bottom: 8px;
+			}
+			.shopNumber span {
+				font-family: "微软雅黑";
+				font-size: 14px;
+				color: #999;
+			}
+			.getNumber {
+				margin: 20px 30px;
+				font-family: "微软雅黑";
+			}
+			.mui-btn-block {
+				padding: 10px 0px;
+				border: 1px solid #000;
+			}
+			.icon-star {
+				color: #c81623;
+			}
+			.c-red {
+				color: #c81623;
+			}
+			.mui-btn {
+				background-color: #000;
+				color: #fff;
+			}
+		</style>
+	</head>
+	
+	<body id="vueControl">
+		<div class="main-content">
+            <div class="weui_cell">
+                <div class="weui_cell_bd weui_cell_primary">
+                    <span>{{shop.name}}</span>
+                </div>
+            </div>
+            <template v-if="!isColse">
+            	<div class="shopNumber">
+	            	<input type="tel" class="screen" id="peopleNum"  placeholder="请输入就餐人数" autofocus="autofocus"/>
+	            	<span>输入就餐人数,领取等位红包</span>
+	            </div>
+	            <div class="getNumber">
+	            	<button id='btn_getNumver' class="mui-btn mui-btn-block" @click="getInfo">领取红包</button>
+	            </div>
+            </template>
+            <template v-else>
+            	<center>
+	            	<h3 style="margin-top: 30%;">
+	            		当前店铺暂未<br /><br />
+	            		开启等位红包
+	            	</h3>
+            	</center>
+            </template>
+            
+		</div>
+		
+		<script src="js/jquery.min.js"></script>
+		<script src="js/vue.min.js"></script>
+		<script src="js/mui.min.js"></script>
+		<script src="js/base.js"></script>
+		<script src="js/common.js"></script>
+
+		<script>
+//		var baseUrl = null;
+//		if(baseUrl.indexOf("test")){
+//			baseUrl = baseUrl.replace(/geekqueuing/, "geekpos");
+//		}else{
+//			baseUrl = baseUrl.replace(/geekqueuing/, "geekqueuing");
+//		}
+//		baseUrl = baseUrl.replace(/geekqueuing/, "geekqueuing");
+//		alert(baseUrl);
+        baseUrl = baseUrl + "/geekqueuing";
+			//var baseUrl = getParam("baseUrl")+"/geekqueuing";
+
+			function plusReady(){
+				var Context = plus.android.importClass("android.content.Context");
+				var InputMethodManager = plus.android.importClass("android.view.inputmethod.InputMethodManager");
+				var main = plus.android.runtimeMainActivity();
+				var imm = main.getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.toggleSoftInput(0,InputMethodManager.SHOW_FORCED);
+			}
+			document.addEventListener("plusready",plusReady,false);
+			
+			var vm = new Vue({
+				el:"#vueControl",
+				data:function () {
+					return {
+						shop:{
+							name:'',
+							CountAppraise:0,
+							numAppraise:0
+						},
+						isColse:false,
+						brandId:"",
+						shopId:""
+					}
+				},
+				created:function () {
+					if(getParam("colse")){//判断当前店铺是否开启了等位模式
+						this.isColse = true;
+					}else{
+						this.getQueueInfo();
+					};
+				},
+				ready:function(){
+					$("#testId").focus();
+				},
+				methods:{
+					getInfo:function(){
+						var personNumber = document.getElementById("peopleNum").value ;
+
+						if(personNumber == "" || personNumber == null){
+							mui.alert("请输入就餐人数！");
+							return;
+						};
+
+						window.location.href = baseUrl+"/waitModel/WXPrint?brandId="+this.brandId+"&shopDetailId="+this.shopId+"&personNumber="+personNumber+"&phone=&customerId="+getParam("customerId");
+//						getNumber(getParam("brandId"),getParam("shopDetailId"),personNumber,null,getParam("customerId"),function(result){
+//							if(result.code == "200"){ //请求成功
+//								window.location.href = 'callNumber.html?baseUrl='+baseUrl;
+//							}else{
+//								mui.alert(result.msg);
+//							}
+//						});
+						
+					},
+					getQueueInfo:function(){
+						var that = this;
+						getQueueInfo(getParam("id"),function(data){
+							console.log(data);
+							that.brandId = data.brandId;
+							that.shopId = data.shopId;
+							that.getShopInformation();
+						})
+					},
+					getShopInformation:function(){
+						var that = this;
+						getShopInformation(this.brandId,this.shopId,function(result){
+							if(result.code == "200"){ //请求成功
+								that.shop.name = result.data.name;
+								that.shop.CountAppraise = result.data.countAppraise;
+								that.shop.numAppraise = result.data.numAppraise;
+							}else{
+								mui.alert(result.msg);
+							}
+							
+						});
+					},
+				}
+			})
+		</script>
+	</body>
+</html>

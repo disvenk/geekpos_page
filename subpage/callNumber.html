@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title id="title"></title>
+		<script type="text/javascript">
+			var isready = false;
+			document.addEventListener("plusready", function() {
+				isready = true;
+				var _BARCODE = 'kivviplugin',
+					B = window.plus.bridge;
+				var kivviplugin = {
+					PluginActionDisplayQR: function(Argus1, Argus2, Argus3, Argus4) {
+						return B.execSync(_BARCODE, "PluginActionDisplayQR", [Argus1, Argus3, Argus3, Argus4]);
+					},
+					PluginActionPrintQR: function(Argus1, Argus2, Argus3, Argus4) {
+						return B.execSync(_BARCODE, "PluginActionPrintQR", [Argus1, Argus2, Argus3, Argus4]);
+					},
+					PluginActionPrintText: function(Argus1, Argus2, Argus3, Argus4, Argus5, Argus6) {
+						return B.execSync(_BARCODE, "PluginActionPrintText", [Argus1, Argus2, Argus3, Argus4, Argus5, Argus6]);
+					},
+					PluginActionPlaySound: function(Argus1, Argus2, Argus3, Argus4) {
+						return B.execSync(_BARCODE, "PluginActionPlaySound", [Argus1, Argus2, Argus3, Argus4]);
+					},
+					PluginActionIdle: function(Argus1, Argus2, Argus3, Argus4) {
+						return B.execSync(_BARCODE, "PluginActionIdle", [Argus1, Argus2, Argus3, Argus4]);
+					},
+				};
+				window.plus.kivviplugin = kivviplugin;
+			}, true);
+			function PluginActionPrintText(Argus1, Argus2, Argus3, Argus4, Argus5, Argus6) {
+				plus.kivviplugin.PluginActionPrintText(Argus1, Argus2, Argus3, Argus4, Argus5, Argus6);
+			}
+			function PluginActionPrintQR(Argus1, Argus2, Argus3, Argus4) {
+				plus.kivviplugin.PluginActionPrintQR("http://kc.restoplus.cn/wechat/index?subpage=tangshi", "http://kc.restoplus.cn/wechat/index?subpage=tangshi", "http://kc.restoplus.cn/wechat/index?subpage=tangshi", "http://kc.restoplus.cn/wechat/index?subpage=tangshi");
+			}
+			function PluginActionDisplayQR(Argus1, Argus2, Argus3, Argus4) {
+				plus.kivviplugin.PluginActionIdle("idle");
+				plus.kivviplugin.PluginActionDisplayQR(Argus1, '1', '3', '4');
+			}
+			function PluginPlaySounds(Argus1, Argus2, Argus3, Argus4) {
+				plus.kivviplugin.PluginActionPlaySound(Argus1, "2", "3", "4");
+			}
+			function PluginActionIdle() {
+				plus.kivviplugin.PluginActionIdle("idle");
+			}
+		</script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../css/keyboard.css" />
+		<script src="../js/base.js"></script>
+
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				border: 0;
+				vertical-align: baseline;
+			}
+			
+			ul,
+			li,
+			ol {
+				list-style: none;
+			}
+			
+			body {
+				background: #fff;
+			}
+			
+			.mui-content {
+				background: #fff;
+			}
+			
+			.full-height {
+				height: 100%;
+				position: relative;
+			}
+			
+			.mui-segmented-control {
+				border: 1px solid #000;
+				border-radius: initial;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-flex-direction: row;
+				flex-direction: row;
+				overflow-x: auto;
+			}
+			
+			.mui-segmented-control .mui-control-item {
+				line-height: 40px;
+				width: 100%;
+				font-size: 14px;
+				color: #000;
+				border-left: 1px solid #000;
+				border-color: #000;
+			}
+			
+			.mui-segmented-control .mui-control-item.mui-active {
+				background-color: #000;
+			}
+			
+			.mui-segmented-control .active {
+				background-color: #000;
+				color: #fff;
+			}
+			/*桌号信息列表*/
+			
+			#mui-article-famliy {
+				position: relative;
+				overflow: hidden;
+				left: 0;
+				width: 100%;
+				background-color: #fff;
+				font-size: 13px;
+			}
+			
+			.mui-segmented-control li {
+				text-align: center;
+				color: #000;
+				width: 20%;
+				float: left;
+				border-left: 1px solid #000;
+				padding: 0px 5px;
+			}
+			
+			.mui-segmented-control li:first-child {
+				border-left: initial;
+			}
+			
+			.mui-segmented-control li:last-child {
+				border-right: 1px solid #000;
+			}
+			
+			.mui-segmented-control>li span {
+				white-space: nowrap;
+				display: block;
+				text-overflow: ellipsis;
+			}
+			/*叫号信息列表*/
+			
+			.mui-article-list {
+				position: absolute;
+				left: 0;
+				width: 100%;
+				height: 430px;
+				border-bottom: 1px solid #fff;
+				overflow: auto;
+			}
+			
+			.article-list {
+				color: #000;
+				border-bottom: 1px solid #000;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-flex-direction: row;
+				flex-direction: row;
+				background-color: #fff;
+			}
+			
+			.mui-table-number {
+				width: 30%;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-flex-direction: column;
+				flex-direction: column;
+				background-color: #fff;
+			}
+			
+			.mui-table-number h4 {
+				text-align: center;
+				padding-top: 5px;
+			}
+			
+			.mui-table-number .mui-wait-time {
+				color: #333333;
+				font-size: 12px;
+			}
+			
+			.mui-table-number span {
+				text-align: center;
+			}
+			
+			.article-list p {
+				width: 15%;
+				text-align: center;
+				margin-top: 20px;
+				color: #222;
+			}
+			
+			.mui-table-logo {
+				width: 55%;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-justify-content: space-around;
+				justify-content: space-around;
+				background-color: #fff;
+				flex-flow: row;
+				height: 60px;
+			}
+			
+			.mui-table-logo a img {
+				width: 40px;
+				height: 40px;
+				border-radius: 5px;
+				background-size: 100% 100%;
+				position: relative;
+				top: 10px;
+				background-color: #D8D8D8;
+			}
+			
+			.mui-table-logo a .callNum {
+				width: 40px;
+				height: 40px;
+				border-radius: 5px;
+				background-size: 100% 100%;
+				position: relative;
+				top: 10px;
+				background-color: #D8D8D8;
+				display: block;
+				text-align: center;
+				line-height: 40px;
+				color: #000;
+			}
+			
+			.mui-btn-block {
+				top: 15px;
+				border: 1px solid #000;
+			}
+			
+			#calculator .focus-input {
+				border: 1px solid #000;
+			}
+		</style>
+	</head>
+
+	<body id="vueControl">
+
+		<div class="mui-content">
+			<div id="segmentedControl" class="mui-segmented-control">
+
+				<a class="mui-control-item" id="mui-call-number" href="#callNumber">
+					叫号就餐
+				</a>
+				<a class="mui-control-item mui-active" href="#waitNumber" @click="showWaitNumber()">
+					等位取号
+				</a>
+			</div>
+			<div>
+				<div id="waitNumber" class="mui-control-content mui-active">
+					<div id="mui-article-famliy" style="overflow: hidden;position: relative;">
+						<ul class="mui-segmented-control" style="border-top: initial;">
+							<li class="active" id="all" style="width: 100%;line-height: 40px;" @click="getAllType()">
+								<span>全部 ({{tableDetail.totalWaitCount}})</span>
+							</li>
+							<li :id="f.codeNumber" style="width: 100%;line-height: 20px;" v-for="f in tableDetail.tableList" @click="changeCurrentType(f)">
+								<span>{{f.name}} ({{f.waitNumber}})</span>
+								<span>{{f.minNumber}}~{{f.maxNumber}}人</span>
+							</li>
+						</ul>
+					</div>
+
+					<div class="mui-article-list">
+						<div class="article-list" v-for="f in waitList">
+							<div class="mui-table-number">
+								<h4>{{f.tableType}}{{f.countByTableTpye}}</h4>
+								<span class="mui-wait-time">已等待{{f.createTime}}分钟</span>
+							</div>
+							<p style="font-size: 18px;">{{f.personNumber}}人</p>
+							<div class="mui-table-logo">
+								<a href='##' @click="getCallNumber(f)"><img src="../images/call.png" alt="叫号" / v-if="f.callNumber == 0">
+									<span v-else class="callNum">{{f.callNumber}}</span>
+								</a>
+								<a href="##" @click="getMealEat(f)"><img src="../images/eat.png" alt="就餐" /></a>
+								<a href="##" @click="getPassNumber(f)"><img src="../images/pass.png" alt="过号" /></a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="callNumber" class="mui-control-content">
+					<div id="calculator">
+						<!-- Screen-->
+						<div class="top">
+							<input type="number" class="screen" id="peopleNum" placeholder="请输入就餐人数" readonly="readonly" style="margin-bottom:10px;" />
+							<input type="number" class="screen" id="telephone" placeholder="请输入手机号" readonly="readonly" style="margin-bottom:10px;" />
+						</div>
+						<div class="keys">
+							<span>1</span>
+							<span>2</span>
+							<span>3</span>
+							<span>4</span>
+							<span>5</span>
+							<span>6</span>
+							<span>7</span>
+							<span>8</span>
+							<span>9</span>
+							<span class="clear">清空</span>
+							<span>0</span>
+							<span>DEL</span>
+						</div>
+						<button id='btn_getNumver' class="mui-btn mui-btn-block" @click="getInfo">取号</button>
+						<button id='btn_showQueueUrl' class="mui-btn mui-btn-block" @click="showQueueUrl">显示二维码</button>
+						<button class="mui-btn mui-btn-block" @click="exitLogin">退出登录</button>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+		<script src="../js/common.js"></script>
+		<script src="../js/util2.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery.min.js"></script>
+		<script src="//cdn.bootcss.com/iScroll/5.1.3/iscroll.min.js"></script>
+		<script src="//cdn.bootcss.com/iScroll/5.1.3/iscroll-probe.min.js"></script>
+		<script>
+			var currentInp = null;
+			$(".screen").click(function() { //切换 input
+				var currentInp = $(this);
+				$(".screen").removeClass("focus-input");
+				$(this).addClass("focus-input");
+			})
+
+			var currentInp = $("#peopleNum"); //默认选中 人数输入框
+			$("#peopleNum").addClass("focus-input");
+
+			$(".keys span").click(function() { //输入	
+				if($(this).html() == "清空") {
+					currentInp.val("");
+				} else if($(this).html() == "DEL") {
+					var val = currentInp.val();
+					currentInp.val(val.substring(0, val.length - 1));
+				} else {
+					currentInp.val(currentInp.val() + $(this).html());
+				}
+			})
+		</script>
+		<script>
+			var vm = new Vue({
+				el: "#vueControl",
+				data: function() {
+					return {
+						showAllType: false,
+						tableType: null,
+						tableDetail: {
+							totalWaitCount: 0,
+							tableList: []
+						},
+						waitList: [],
+						queueCodePage: "", //用户自助取号页面链接
+						refreshTime:"",//自动刷新时间
+					}
+				},
+				created: function() {
+					var that = this;
+					document.getElementById("title").innerHTML = localStorage.getItem("shopName");
+					getTableInfo(localStorage.getItem("brandId"), localStorage.getItem("shopId"), function(result) {
+						if(result.code == "200") { //请求成功
+							that.tableDetail.tableList = [];
+							that.tableDetail.totalWaitCount = result.data.totalWaitCount;
+							for(var i = 0; i < result.data.tableList.length; i++) {
+								var tableInfo = result.data.tableList[i];
+								that.tableDetail.tableList.push(tableInfo);
+							}
+						} else {
+							mui.alert("桌位信息获取失败");
+						}
+					});
+					getWaitList(localStorage.getItem("brandId"), localStorage.getItem("shopId"), "", function(result) {
+						if(result.code == "200") { //请求成功
+							if(result.data != null) {
+								for(var i = 0; i < result.data.length; i++) {
+									var waitInfo = result.data[i];
+									waitInfo.createTime = ((new Date().getTime() - waitInfo.createTime.time) / 1000 / 60).toFixed(0);
+									that.waitList.push(waitInfo);
+								}
+							}
+
+						} else {
+							mui.alert("等待桌位信息获取失败");
+						}
+					});
+					
+					//设置小屏排队二维码
+					this.autoRefreshQrCode();
+//					this.getQueueCodePage();
+				},
+				ready: function() {
+
+				},
+				methods: {
+					getInfo: function() {
+						var personNumber = document.getElementById("peopleNum").value;
+						var phone = document.getElementById("telephone").value;
+
+						if(personNumber == "" || personNumber == null) {
+							alert("请输入就餐人数！");
+							return;
+						}
+						getNumber(localStorage.getItem("brandId"), localStorage.getItem("shopId"), personNumber, phone,null, function(result) {
+							if(result.code == "200") { //请求成功
+
+								PluginActionPrintText(result.data.shopName, result.data.tableType + result.data.countByTableTpye, result.data.personNumber + "人就餐," + result.data.waitNumber + "桌在等待", "微信扫一扫，领取等位红包", new Date(result.data.createTime.time).format("yyyy-MM-dd hh:mm:ss"), result.data.imgUrl);
+								window.location.href = 'callNumber.html?baseUrl=' + baseUrl;
+							} else {
+								alert(result.msg);
+							}
+						});
+
+					},
+					autoRefreshQrCode:function(){
+						var that = this;
+						getLastQueueInfo(localStorage.getItem("brandId"), localStorage.getItem("shopId"), function(data){
+							console.log(data);
+							if(data){
+								var timestamp = data.endTime.time - Date.parse(new Date()) ;
+								console.log("时间戳："+timestamp)
+								if(timestamp > 0){
+									console.log("二维码暂未失效，设置自动刷新时间："+timestamp)
+									that.getQueueCodePage(data.id);
+									setTimeout(that.autoRefreshQrCode,timestamp-10000)//提前十秒刷新
+								}else{
+									console.log("刷新二维码");
+									that.getQueueCodePage();
+								}
+							}else{
+								console.log("返回值为 null - 刷新二维码");
+								that.getQueueCodePage();
+							}
+							
+						},function(errorFun){
+							console.log("后台抱错，强制刷新");
+							that.getQueueCodePage();
+						});
+					},
+					exitLogin: function(){
+						PluginActionIdle();
+						window.parent.location.href = "http://test.restoplus.cn/geekqueuing/pos/index";
+					},
+					showQueueUrl: function() { //显示、关闭小屏的排队二维码
+						var val = $("#btn_showQueueUrl").html();
+						if(val == "关闭二维码") {
+							PluginActionIdle();
+							$("#btn_showQueueUrl").html("显示二维码");
+						} else {
+							if(this.queueCodePage.length>0){
+								PluginActionDisplayQR(this.queueCodePage);
+							}else{
+								this.getQueueCodePage();
+							}
+							$("#btn_showQueueUrl").html("关闭二维码");
+						}
+					},
+					getQueueCodePage: function(queueQrCodeId) { //获取当前店铺自助排队页面链接
+						var that = this;
+						getQueueCodePage(localStorage.getItem("brandId"), localStorage.getItem("shopId"),queueQrCodeId, function(data) {
+//							PluginActionDisplayQR(data);
+							that.queueCodePage = data;
+						});
+					},
+					getAllType: function() {
+						var that = this;
+						that.getWaitList("");
+						that.tableType = null;
+						$(".mui-segmented-control li").removeClass("active");
+						$('#all').addClass("active");
+					},
+					changeCurrentType: function(f) {
+						var that = this;
+						this.currentType = f;
+						var fid = f.codeNumber;
+						this.tableType = f;
+						that.getWaitList(fid);
+						$(".mui-segmented-control li").removeClass("active");
+						$('#' + fid).addClass("active");
+
+					},
+					getTableList: function() {
+						var that = this;
+						that.tableDetail.tableList = [];
+						getTableInfo(localStorage.getItem("brandId"), localStorage.getItem("shopId"), function(result) {
+							if(result.code == "200") { //请求成功
+								that.tableDetail.totalWaitCount = result.data.totalWaitCount;
+								for(var i = 0; i < result.data.tableList.length; i++) {
+									var tableInfo = result.data.tableList[i];
+									that.tableDetail.tableList.push(tableInfo);
+								}
+							} else {
+								mui.alert("桌位信息获取失败");
+							}
+						});
+					},
+					getWaitList: function(type) {
+						var that = this;
+						that.waitList = [];
+						getWaitList(localStorage.getItem("brandId"), localStorage.getItem("shopId"), type, function(result) {
+							if(result.code == "200") { //请求成功
+								if(result.data != null) {
+									for(var i = 0; i < result.data.length; i++) {
+										var waitInfo = result.data[i];
+										waitInfo.createTime = ((new Date().getTime() - waitInfo.createTime.time) / 1000 / 60).toFixed(0);
+										that.waitList.push(waitInfo);
+									}
+								}
+							} else {
+								mui.alert("等待桌位信息获取失败");
+							}
+						});
+
+					},
+					showWaitNumber: function() {
+						//						window.location.reload();
+						var that = this;
+						Vue.nextTick(function() {
+							that.articleList = new IScroll("#waitNumber", {
+								probeType: 2,
+								scrollX: true,
+								scrollY: false,
+								click: iScrollClick()
+							});
+						})
+					},
+					sleep: function(n) {
+						var start = new Date().getTime();
+						while(true) {
+							if(new Date().getTime() - start > n)
+								break;
+						}
+					},
+					playMusic: function(f) {
+						var name = f.tableType.toLowerCase() + f.countByTableTpye;
+
+						name = name.toLowerCase();
+
+						for(var i = 0; i < name.length; i++) {
+
+							PluginPlaySounds(name[i]);
+							this.sleep(466);
+						}
+						PluginPlaySounds("play");
+
+					},
+					getCallNumber: function(f) {
+						var that = this;
+
+						updateWaitState(localStorage.getItem("brandId"), localStorage.getItem("shopId"), f.id, 0, function(result) {
+							if(result.code == "200") { //请求成功
+								var type = that.tableType == null ? "" : that.tableType.codeNumber;
+								that.getWaitList(type);
+								that.getTableList();
+								$(".mui-segmented-control li").removeClass("active");
+								if(type == "") {
+									$('#all').addClass("active");
+								} else {
+									$('#' + type).addClass("active");
+								}
+								//window.location.reload();
+
+								if(isready) {
+
+									that.playMusic(f);
+								} else {
+									setTimeout(function() {
+										that.playMusic(f);
+									}, 1000);
+								}
+
+							}
+						});
+
+					},
+					getMealEat: function(f) {
+						var that = this;
+						updateWaitState(localStorage.getItem("brandId"), localStorage.getItem("shopId"), f.id, 1, function(result) {
+							if(result.code == "200") { //请求成功
+								var type = that.tableType == null ? "" : that.tableType.codeNumber;
+								that.getWaitList(type);
+								that.getTableList();
+
+							} else {
+								mui.alert("叫号失败");
+							}
+						});
+					},
+					getPassNumber: function(f) {
+						var that = this;
+						updateWaitState(localStorage.getItem("brandId"), localStorage.getItem("shopId"), f.id, 2, function(result) {
+							if(result.code == "200") { //请求成功
+								var type = that.tableType == null ? "" : that.tableType.codeNumber;
+								that.getWaitList(type);
+								that.getTableList();
+
+							} else {
+								mui.alert("叫号失败");
+							}
+						});
+					},
+
+				}
+			})
+		</script>
+	</body>
+
+</html>
